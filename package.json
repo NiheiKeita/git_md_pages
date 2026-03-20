@@ -1,11 +1,34 @@
 {
-  "name": "git_md_pages",
+  "name": "git-md-pages",
   "version": "0.1.0",
-  "private": true,
+  "description": "Static documentation site generator for Markdown with search, breadcrumbs, and directory indexes.",
+  "license": "MIT",
+  "keywords": [
+    "markdown",
+    "docs",
+    "static-site-generator",
+    "documentation",
+    "search"
+  ],
   "type": "module",
+  "bin": {
+    "git-md-pages": "./bin/git-md-pages.mjs"
+  },
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "files": [
+    "bin",
+    "src/core",
+    "src/index.mjs",
+    "src/theme-default",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "node scripts/build.mjs",
-    "check": "npm run build"
+    "check": "npm run build",
+    "docs:build": "git-md-pages build"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
