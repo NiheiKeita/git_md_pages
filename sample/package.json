@@ -1,0 +1,11 @@
+{
+  "name": "mdocbuilder-sample",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "mdocbuilder build"
+  },
+  "devDependencies": {
+    "mdocbuilder": "file:.."
+  }
+}

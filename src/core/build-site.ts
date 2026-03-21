@@ -2,19 +2,93 @@ import fs from "node:fs/promises";
 import { existsSync, statSync } from "node:fs";
 import path from "node:path";
 import { execSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import matter from "gray-matter";
 import MarkdownIt from "markdown-it";
 import hljs from "highlight.js";
 
-const rootDir = process.cwd();
-const docsDir = path.join(rootDir, "docs");
-const distDir = path.join(rootDir, "dist");
-const clientDir = path.join(rootDir, "src", "client");
+const DEFAULT_THEME_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../src/theme-default");
 
-const basePath = normalizeBasePath(process.env.SITE_BASE || "/");
-const siteName = process.env.SITE_NAME || humanizeSegment(path.basename(rootDir));
-const repoUrl = getGitHubRepoUrl();
-const sourceBranch = process.env.SOURCE_BRANCH || getGitBranch();
+export type BuildConfig = {
+  rootDir?: string;
+  docsDir?: string;
+  outDir?: string;
+  basePath?: string;
+  siteName?: string;
+  github?: {
+    repoUrl?: string;
+    branch?: string;
+  };
+  theme?: {
+    directory?: string;
+    customCss?: string;
+  };
+};
+
+export type ResolvedBuildConfig = {
+  rootDir: string;
+  docsDir: string;
+  outDir: string;
+  themeDir: string;
+  customCssPath: string;
+  basePath: string;
+  siteName: string;
+  repoUrl: string;
+  sourceBranch: string;
+};
+
+type Heading = {
+  depth: number;
+  text: string;
+  slug: string;
+};
+
+type DocumentRecord = {
+  title: string;
+  description: string;
+  path: string;
+  sourcePath: string;
+  headings: Heading[];
+  plainText: string;
+  updatedAt: string;
+  directory: string;
+  html: string;
+  isIndex: boolean;
+  isGeneratedIndex: boolean;
+  fallbackName: string;
+};
+
+type DirectoryEntry = {
+  kind: "group" | "page";
+  title: string;
+  path: string;
+  description: string;
+};
+
+type DirectoryNode = {
+  name: string;
+  route: string;
+  title: string;
+  indexDocument: DocumentRecord | null;
+  generatedDocument: DocumentRecord | null;
+  documents: DocumentRecord[];
+  children: Map<string, DirectoryNode>;
+};
+
+type BreadcrumbItem = {
+  label: string;
+  href: string | null;
+};
+
+let rootDir = process.cwd();
+let docsDir = path.join(rootDir, "docs");
+let distDir = path.join(rootDir, "dist");
+let themeDir = DEFAULT_THEME_DIR;
+let customCssPath = "";
+let basePath = "/";
+let siteName = humanizeSegment(path.basename(rootDir));
+let repoUrl = "";
+let sourceBranch = "main";
 
 const md = new MarkdownIt({
   html: true,
@@ -29,7 +103,8 @@ const md = new MarkdownIt({
   },
 });
 
-async function main() {
+export async function buildSite(userConfig: BuildConfig = {}): Promise<void> {
+  configureBuild(userConfig);
   await resetDist();
 
   const markdownFiles = await findMarkdownFiles(docsDir);
@@ -95,6 +170,38 @@ async function main() {
   console.log(
     `Built ${sourceDocs.length} markdown document(s) and ${generatedDocs.length} generated directory page(s) into ${path.relative(rootDir, distDir)}.`,
   );
+}
+
+function configureBuild(userConfig: BuildConfig): void {
+  const resolved = resolveBuildConfig(userConfig);
+  rootDir = resolved.rootDir;
+  docsDir = resolved.docsDir;
+  distDir = resolved.outDir;
+  themeDir = resolved.themeDir;
+  customCssPath = resolved.customCssPath;
+  basePath = resolved.basePath;
+  siteName = resolved.siteName;
+  repoUrl = resolved.repoUrl;
+  sourceBranch = resolved.sourceBranch;
+}
+
+export function resolveBuildConfig(userConfig: BuildConfig = {}): ResolvedBuildConfig {
+  const currentRoot = path.resolve(userConfig.rootDir || process.cwd());
+  return {
+    rootDir: currentRoot,
+    docsDir: path.resolve(currentRoot, userConfig.docsDir || "docs"),
+    outDir: path.resolve(currentRoot, userConfig.outDir || "dist"),
+    themeDir: userConfig.theme?.directory
+      ? path.resolve(currentRoot, userConfig.theme.directory)
+      : DEFAULT_THEME_DIR,
+    customCssPath: userConfig.theme?.customCss
+      ? path.resolve(currentRoot, userConfig.theme.customCss)
+      : "",
+    basePath: normalizeBasePath(userConfig.basePath || process.env.SITE_BASE || "/"),
+    siteName: userConfig.siteName || process.env.SITE_NAME || humanizeSegment(path.basename(currentRoot)),
+    repoUrl: userConfig.github?.repoUrl || getGitHubRepoUrl(currentRoot),
+    sourceBranch: userConfig.github?.branch || process.env.SOURCE_BRANCH || getGitBranch(currentRoot),
+  };
 }
 
 async function resetDist() {
@@ -999,6 +1106,9 @@ function renderShell({ title, description, currentPath, content }) {
   const repoLink = repoUrl
     ? `<a class="header-link" href="${escapeHtml(repoUrl)}" target="_blank" rel="noreferrer">GitHub</a>`
     : "";
+  const customCssLink = customCssPath
+    ? `<link rel="stylesheet" href="${escapeHtml(prefixBasePath("/assets/custom.css"))}">`
+    : "";
 
   return `<!doctype html>
 <html lang="ja">
@@ -1008,6 +1118,7 @@ function renderShell({ title, description, currentPath, content }) {
     <title>${escapeHtml(pageTitle)}</title>
     <meta name="description" content="${escapeHtml(description || siteName)}">
     <link rel="stylesheet" href="${escapeHtml(prefixBasePath("/assets/styles.css"))}">
+    ${customCssLink}
     <script>
       window.__SITE_CONFIG__ = ${JSON.stringify({ basePath, siteName })};
     </script>
@@ -1058,8 +1169,11 @@ async function writePage(route, html) {
 async function copyClientAssets() {
   const assetsDist = path.join(distDir, "assets");
   await fs.mkdir(assetsDist, { recursive: true });
-  await fs.copyFile(path.join(clientDir, "styles.css"), path.join(assetsDist, "styles.css"));
-  await fs.copyFile(path.join(clientDir, "search.js"), path.join(assetsDist, "search.js"));
+  await fs.copyFile(path.join(themeDir, "styles.css"), path.join(assetsDist, "styles.css"));
+  await fs.copyFile(path.join(themeDir, "search.js"), path.join(assetsDist, "search.js"));
+  if (customCssPath) {
+    await fs.copyFile(customCssPath, path.join(assetsDist, "custom.css"));
+  }
 }
 
 async function copyDocAssets(files) {
@@ -1240,10 +1354,10 @@ function escapeHtml(value) {
     .replaceAll('"', "&quot;");
 }
 
-function getGitBranch() {
+function getGitBranch(cwd = rootDir) {
   try {
     return execSync("git rev-parse --abbrev-ref HEAD", {
-      cwd: rootDir,
+      cwd,
       stdio: ["ignore", "pipe", "ignore"],
     })
       .toString()
@@ -1253,10 +1367,10 @@ function getGitBranch() {
   }
 }
 
-function getGitHubRepoUrl() {
+function getGitHubRepoUrl(cwd = rootDir) {
   try {
     const remote = execSync("git remote get-url origin", {
-      cwd: rootDir,
+      cwd,
       stdio: ["ignore", "pipe", "ignore"],
     })
       .toString()
@@ -1275,8 +1389,3 @@ function getGitHubRepoUrl() {
     return "";
   }
 }
-
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});

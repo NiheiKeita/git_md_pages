@@ -1,11 +1,46 @@
 {
-  "name": "git_md_pages",
+  "name": "mdocbuilder",
   "version": "0.1.0",
-  "private": true,
+  "description": "Static documentation site generator for Markdown with search, breadcrumbs, and directory indexes.",
+  "license": "MIT",
+  "keywords": [
+    "markdown",
+    "docs",
+    "static-site-generator",
+    "documentation",
+    "search"
+  ],
   "type": "module",
+  "bin": {
+    "mdocbuilder": "./bin/mdocbuilder.mjs"
+  },
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js"
+    }
+  },
+  "types": "./lib/index.d.ts",
+  "files": [
+    "bin",
+    "lib",
+    "src/theme-default",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
-    "build": "node scripts/build.mjs",
-    "check": "npm run build"
+    "build:lib": "tsc -p tsconfig.json",
+    "sample:install": "npm run build:lib && npm install --prefix sample",
+    "sample:build": "npm run sample:install && npm run build --prefix sample",
+    "build": "npm run build:lib",
+    "check": "npm run build:lib && npm run sample:build",
+    "test": "npm run build:lib && node --test --test-concurrency=1 test/build-site.test.mjs",
+    "docs:build": "npm run sample:build",
+    "prepack": "npm run build:lib"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "typescript": "^5.9.2"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

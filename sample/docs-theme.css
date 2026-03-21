@@ -1,0 +1,12 @@
+:root {
+  --accent: #14532d;
+  --accent-strong: #166534;
+}
+
+.brand-mark {
+  color: var(--accent);
+}
+
+.site-header {
+  border-bottom-color: color-mix(in srgb, var(--accent) 24%, var(--line));
+}
