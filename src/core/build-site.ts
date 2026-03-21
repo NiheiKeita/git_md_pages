@@ -720,7 +720,7 @@ function buildDocumentBodyHtml(doc, tree) {
 function replaceDirectoryIndexMarker(html, doc, tree) {
   const embedded = renderEmbeddedDirectoryIndex(doc, tree);
   return html.replace(
-    /<p>(?:\s*(?:dlindex|\{\{dlindex\}\}|\[\[dlindex\]\])\s*)<\/p>/gi,
+    /<p>(?:\s*\{\{mdocbuildindex\}\}\s*)<\/p>/gi,
     embedded,
   );
 }
@@ -731,7 +731,7 @@ function renderAutoDirectoryIndex(node) {
   }
 
   return `
-    <p>このページは <code>index.md</code> が無いため、自動生成されたディレクトリ一覧です。</p>
+    <p>このページは <code>index.md</code> が無いため、自動生成された一覧ページです。表示するのはこの階層の直下だけです。</p>
     ${renderEmbeddedDirectoryEntries(getDirectoryEntries(node))}
   `;
 }
@@ -747,7 +747,7 @@ function renderEmbeddedDirectoryIndex(doc, tree) {
 function renderEmbeddedDirectoryEntries(entries) {
   return `
     <section class="directory-embed">
-      <h2>Directory index</h2>
+      <h2>このディレクトリの一覧</h2>
       ${entries.length ? renderEntryList(entries) : renderEmptyState("この階層にはまだ子ページがありません。", "Markdown を追加するとここに自動表示されます。")}
     </section>
   `;

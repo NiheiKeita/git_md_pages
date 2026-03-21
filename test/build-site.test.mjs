@@ -33,10 +33,10 @@ test("buildSite generates search index and auto directory pages", async () => {
   assert.equal(searchIndex.documents.some((doc) => doc.path === "/test/hoge/"), true);
 });
 
-test("dlindex embeds only direct children for index pages", async () => {
+test("{{mdocbuildindex}} embeds only direct children for index pages", async () => {
   const rootDir = await createTempProject({
     "docs/index.md": "# Home\n",
-    "docs/reference/index.md": "# Reference\n\ndlindex\n",
+    "docs/reference/index.md": "# Reference\n\n{{mdocbuildindex}}\n",
     "docs/reference/frontmatter.md": "# Frontmatter\n\nFlat page.\n",
     "docs/reference/deep/note.md": "# Deep Note\n\nNested page.\n",
   });

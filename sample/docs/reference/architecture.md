@@ -35,8 +35,8 @@ description: mdocbuilder の build が何をしているかを処理の流れで
 - 見出し slug の付与
 - `.md` リンクのルート URL 化
 - パンくず計算
-- 同階層 / 直下の一覧生成
-- `dlindex` 差し込み
+- 直下 1 階層だけの一覧生成
+- `{{mdocbuildindex}}` 差し込み
 - 自動 directory index 生成
 
 ## 出力データ
