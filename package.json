@@ -30,10 +30,12 @@
   ],
   "scripts": {
     "build:lib": "tsc -p tsconfig.json",
-    "build": "npm run build:lib && node scripts/build.mjs",
-    "check": "npm run build",
+    "sample:install": "npm run build:lib && npm install --prefix sample",
+    "sample:build": "npm run sample:install && npm run build --prefix sample",
+    "build": "npm run build:lib",
+    "check": "npm run build:lib && npm run sample:build",
     "test": "npm run build:lib && node --test --test-concurrency=1 test/build-site.test.mjs",
-    "docs:build": "npm run build:lib && node bin/git-md-pages.mjs build",
+    "docs:build": "npm run sample:build",
     "prepack": "npm run build:lib"
   },
   "devDependencies": {

@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run build
+      - name: Run library and sample build
         run: npm run check
 
       - name: Run tests
@@ -32,9 +32,9 @@ jobs:
 
       - name: Verify build artifacts
         run: |
-          test -f dist/index.html
-          test -f dist/search-index.json
-          test -f dist/site-data.json
+          test -f sample/dist/index.html
+          test -f sample/dist/search-index.json
+          test -f sample/dist/site-data.json
 
       - name: Verify package contents
         run: npm pack --dry-run

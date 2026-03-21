@@ -1,0 +1,11 @@
+{
+  "name": "git-md-pages-sample",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "git-md-pages build"
+  },
+  "devDependencies": {
+    "git-md-pages": "file:.."
+  }
+}
