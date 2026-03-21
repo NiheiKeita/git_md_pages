@@ -1,9 +1,9 @@
 ---
-title: Git MD Pages
+title: mdocbuilder
 description: Markdown から一覧・検索・パンくず付きのドキュメントサイトを生成するサンプルです。
 ---
 
-# Git MD Pages
+# mdocbuilder
 
 Markdown を `docs/` に置くだけで、検索しやすく読みやすいドキュメントサイトとして公開するためのサンプルです。
 

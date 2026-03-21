@@ -1,11 +1,11 @@
 {
-  "name": "git-md-pages-sample",
+  "name": "mdocbuilder-sample",
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "git-md-pages build"
+    "build": "mdocbuilder build"
   },
   "devDependencies": {
-    "git-md-pages": "file:.."
+    "mdocbuilder": "file:.."
   }
 }

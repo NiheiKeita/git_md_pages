@@ -54,11 +54,11 @@ test("dlindex embeds only direct children for index pages", async () => {
   assert.doesNotMatch(referencePage, /Deep Note/);
 });
 
-test("loadConfig reads git-md-pages.config.mjs and custom CSS is emitted", async () => {
+test("loadConfig reads mdocbuilder.config.mjs and custom CSS is emitted", async () => {
   const rootDir = await createTempProject({
     "docs/index.md": "# Home\n",
     "docs-theme.css": ":root { --accent: #000; }\n",
-    "git-md-pages.config.mjs": `
+    "mdocbuilder.config.mjs": `
       export default {
         siteName: "Configured Docs",
         docsDir: "docs",
@@ -82,7 +82,7 @@ test("loadConfig reads git-md-pages.config.mjs and custom CSS is emitted", async
 });
 
 async function createTempProject(files) {
-  const rootDir = await fs.mkdtemp(path.join(os.tmpdir(), "git-md-pages-test-"));
+  const rootDir = await fs.mkdtemp(path.join(os.tmpdir(), "mdocbuilder-test-"));
   for (const [relativePath, content] of Object.entries(files)) {
     const absolutePath = path.join(rootDir, relativePath);
     await fs.mkdir(path.dirname(absolutePath), { recursive: true });

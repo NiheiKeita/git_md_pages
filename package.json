@@ -1,5 +1,5 @@
 {
-  "name": "git-md-pages",
+  "name": "mdocbuilder",
   "version": "0.1.0",
   "description": "Static documentation site generator for Markdown with search, breadcrumbs, and directory indexes.",
   "license": "MIT",
@@ -12,7 +12,7 @@
   ],
   "type": "module",
   "bin": {
-    "git-md-pages": "./bin/git-md-pages.mjs"
+    "mdocbuilder": "./bin/mdocbuilder.mjs"
   },
   "exports": {
     ".": {

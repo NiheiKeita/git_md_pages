@@ -1,21 +1,21 @@
-# git-md-pages
+# mdocbuilder
 
 Markdown を配置するだけで、一覧・検索・パンくず付きの静的ドキュメントサイトを生成する CLI / ライブラリです。
 
 TypeScript の型定義を同梱しているので、ライブラリとして import して使う場合も補完が効きます。
 
-この repository 自体でも、利用例は [`sample/`](/Users/niheikeita/develop/git_md_pages/sample) に分けています。ライブラリ本体と、実際に `npm install` して使う側を分離して見られます。
+この repository 自体でも、利用例は `sample/` に分けています。ライブラリ本体と、実際に `npm install` して使う側を分離して見られます。
 
 ## Install
 
 ```bash
-npm install -D git-md-pages
+npm install -D mdocbuilder
 ```
 
 ## Usage
 
 ```bash
-npx git-md-pages build
+npx mdocbuilder build
 ```
 
 または `package.json`:
@@ -23,14 +23,14 @@ npx git-md-pages build
 ```json
 {
   "scripts": {
-    "docs:build": "git-md-pages build"
+    "docs:build": "mdocbuilder build"
   }
 }
 ```
 
 ## Config
 
-プロジェクトルートに `git-md-pages.config.mjs` を置きます。
+プロジェクトルートに `mdocbuilder.config.mjs` を置きます。
 
 ```js
 export default {
@@ -60,12 +60,12 @@ export default {
 npm run sample:build
 ```
 
-これで `sample/package.json` からローカルの `git-md-pages` を install し、`sample/docs/` を build します。
+これで `sample/package.json` からローカルの `mdocbuilder` を install し、`sample/docs/` を build します。
 
 ## Library API
 
 ```js
-import { buildSite } from "git-md-pages";
+import { buildSite } from "mdocbuilder";
 
 await buildSite({
   rootDir: process.cwd(),
@@ -85,4 +85,4 @@ git push origin v1.0.0
 
 プレリリース相当なら `v1.0.0-r1` のようなタグも使えます。`package.json` の `version` とタグは一致している必要があります。
 
-GitHub Actions から npm publish するには、npm 側でこの repository と [`release.yml`](/Users/niheikeita/develop/git_md_pages/.github/workflows/release.yml) を Trusted Publisher として登録してください。
+GitHub Actions から npm publish するには、npm 側でこの repository と `.github/workflows/release.yml` を Trusted Publisher として登録してください。

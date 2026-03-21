@@ -1,11 +1,11 @@
 ---
 title: 設定リファレンス
-description: git-md-pages.config.mjs で指定できる項目の意味をまとめます。
+description: mdocbuilder.config.mjs で指定できる項目の意味をまとめます。
 ---
 
 # 設定リファレンス
 
-`git-md-pages` はプロジェクトルートの `git-md-pages.config.mjs` を読み込んで build 設定を決めます。
+`mdocbuilder` はプロジェクトルートの `mdocbuilder.config.mjs` を読み込んで build 設定を決めます。
 
 ## 基本形
 
@@ -46,5 +46,5 @@ export default {
 
 この repository の sample 設定は以下です。
 
-- `sample/git-md-pages.config.mjs`
+- `sample/mdocbuilder.config.mjs`
 - `sample/docs-theme.css`

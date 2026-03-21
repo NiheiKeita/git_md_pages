@@ -4,8 +4,8 @@ import fs from "node:fs/promises";
 import type { BuildConfig } from "./build-site.js";
 
 const DEFAULT_CONFIG_FILES = [
-  "git-md-pages.config.mjs",
-  "git-md-pages.config.js",
+  "mdocbuilder.config.mjs",
+  "mdocbuilder.config.js",
 ];
 
 type LoadConfigOptions = {

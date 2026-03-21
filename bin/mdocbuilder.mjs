@@ -9,7 +9,7 @@ const configPath = readOption(args, "--config");
 
 if (command !== "build") {
   console.error(`Unknown command: ${command}`);
-  console.error("Usage: git-md-pages build [--config ./git-md-pages.config.mjs]");
+  console.error("Usage: mdocbuilder build [--config ./mdocbuilder.config.mjs]");
   process.exit(1);
 }
 

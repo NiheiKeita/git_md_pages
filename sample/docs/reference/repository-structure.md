@@ -30,14 +30,14 @@ description: root と sample の役割分担、主要ディレクトリの意味
 
 ### `bin/`
 
-CLI の入口です。`git-md-pages build` がここから始まります。
+CLI の入口です。`mdocbuilder build` がここから始まります。
 
 ### `sample/`
 
 ライブラリを実際に install して使う例です。
 
 - `sample/package.json`
-- `sample/git-md-pages.config.mjs`
+- `sample/mdocbuilder.config.mjs`
 - `sample/docs/`
 - `sample/docs-theme.css`
 

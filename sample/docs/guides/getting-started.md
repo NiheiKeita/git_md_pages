@@ -1,23 +1,23 @@
 ---
 title: はじめに
-description: git-md-pages を導入して sample/docs をビルドするまでの最短手順です。
+description: mdocbuilder を導入して sample/docs をビルドするまでの最短手順です。
 ---
 
 # はじめに
 
-このページは `git-md-pages` をどう使うかを最短で把握するためのガイドです。
+このページは `mdocbuilder` をどう使うかを最短で把握するためのガイドです。
 
 ## 1. インストール
 
 公開後は使う側のリポジトリで以下を実行します。
 
 ```bash
-npm install -D git-md-pages
+npm install -D mdocbuilder
 ```
 
 ## 2. 設定ファイルを置く
 
-プロジェクトルートに `git-md-pages.config.mjs` を置きます。
+プロジェクトルートに `mdocbuilder.config.mjs` を置きます。
 
 ```js
 export default {
@@ -49,7 +49,7 @@ docs/
 ## 4. build する
 
 ```bash
-npx git-md-pages build
+npx mdocbuilder build
 ```
 
 または `package.json` に script を置きます。
@@ -57,7 +57,7 @@ npx git-md-pages build
 ```json
 {
   "scripts": {
-    "docs:build": "git-md-pages build"
+    "docs:build": "mdocbuilder build"
   }
 }
 ```
@@ -73,7 +73,7 @@ npx git-md-pages build
 
 この repository では root がライブラリ本体、`sample/` が利用側プロジェクトです。
 
-- root: `git-md-pages` のソースコード
+- root: `mdocbuilder` のソースコード
 - `sample/docs/`: サンプル Markdown
 - `sample/package.json`: ライブラリを install して使う側
 

@@ -1,10 +1,10 @@
 export default {
-  siteName: "Git MD Pages",
+  siteName: "mdocbuilder",
   docsDir: "docs",
   outDir: "dist",
   basePath: "/",
   github: {
-    repoUrl: "https://github.com/NiheiKeita/git_md_pages",
+    repoUrl: "https://github.com/owner/mdocbuilder",
     branch: "main",
   },
   theme: {
