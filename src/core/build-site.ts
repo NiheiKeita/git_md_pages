@@ -152,14 +152,6 @@ export async function buildSite(userConfig: BuildConfig = {}): Promise<void> {
   if (!homeDoc) {
     const homePage = renderHomePage({ docs, tree });
     await writePage("/", homePage);
-  } else {
-    const currentHtml = await fs.readFile(path.join(distDir, "index.html"), "utf8");
-    const enhancedHome = injectHomeOverview({
-      html: currentHtml,
-      docs,
-      tree,
-    });
-    await fs.writeFile(path.join(distDir, "index.html"), enhancedHome);
   }
 
   await copyClientAssets();
@@ -775,7 +767,7 @@ function renderDocumentPage({ doc, breadcrumbs, sectionEntries, bodyHtml }) {
     `
     : "";
 
-  const sectionLinks = sectionEntries.length
+  const sectionLinks = doc.path !== "/" && sectionEntries.length
     ? `
       <section class="sidebar-panel">
         <h2 class="sidebar-heading">${doc.isIndex || doc.isGeneratedIndex ? "In this directory" : "Nearby pages"}</h2>
@@ -914,43 +906,6 @@ function renderHomePage({ docs, tree }) {
     currentPath: "/",
     content,
   });
-}
-
-function injectHomeOverview({ html, docs, tree }) {
-  const recentDocs = docs
-    .filter((doc) => doc.path !== "/" && !doc.isGeneratedIndex)
-    .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-    .slice(0, 6);
-
-  const overview = `
-    <section class="overview-panel home-intro">
-      <h2 class="overview-title">Site overview</h2>
-      <div class="overview-hero">
-        <div class="overview-stat">
-          <span class="overview-stat-label">Documents</span>
-          <span class="overview-stat-value">${docs.filter((doc) => !doc.isGeneratedIndex).length}</span>
-        </div>
-        <div class="overview-stat">
-          <span class="overview-stat-label">Sections</span>
-          <span class="overview-stat-value">${countSections(tree)}</span>
-        </div>
-        <div class="overview-stat">
-          <span class="overview-stat-label">Search</span>
-          <span class="overview-stat-value">${docs.length ? "Ready" : "Waiting"}</span>
-        </div>
-      </div>
-    </section>
-    <section class="overview-panel">
-      <h2 class="overview-title">Recently updated</h2>
-      ${recentDocs.length ? renderDocList(recentDocs) : renderEmptyState("まだ公開ページがありません。", "docs/**/*.md を追加して build するとここに並びます。")}
-    </section>
-    <section class="overview-panel">
-      <h2 class="overview-title">Browse by directory</h2>
-      ${renderDirectorySections(tree)}
-    </section>
-  `;
-
-  return html.replace("</main>", `${overview}</main>`);
 }
 
 function renderSearchPage() {
