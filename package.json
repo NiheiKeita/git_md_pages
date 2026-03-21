@@ -15,20 +15,30 @@
     "git-md-pages": "./bin/git-md-pages.mjs"
   },
   "exports": {
-    ".": "./src/index.mjs"
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js"
+    }
   },
+  "types": "./lib/index.d.ts",
   "files": [
     "bin",
-    "src/core",
-    "src/index.mjs",
+    "lib",
     "src/theme-default",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
-    "build": "node scripts/build.mjs",
+    "build:lib": "tsc -p tsconfig.json",
+    "build": "npm run build:lib && node scripts/build.mjs",
     "check": "npm run build",
-    "docs:build": "git-md-pages build"
+    "test": "npm run build:lib && node --test --test-concurrency=1 test/build-site.test.mjs",
+    "docs:build": "npm run build:lib && node bin/git-md-pages.mjs build",
+    "prepack": "npm run build:lib"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "typescript": "^5.9.2"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

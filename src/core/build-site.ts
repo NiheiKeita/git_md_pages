@@ -7,7 +7,78 @@ import matter from "gray-matter";
 import MarkdownIt from "markdown-it";
 import hljs from "highlight.js";
 
-const DEFAULT_THEME_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../theme-default");
+const DEFAULT_THEME_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../src/theme-default");
+
+export type BuildConfig = {
+  rootDir?: string;
+  docsDir?: string;
+  outDir?: string;
+  basePath?: string;
+  siteName?: string;
+  github?: {
+    repoUrl?: string;
+    branch?: string;
+  };
+  theme?: {
+    directory?: string;
+    customCss?: string;
+  };
+};
+
+export type ResolvedBuildConfig = {
+  rootDir: string;
+  docsDir: string;
+  outDir: string;
+  themeDir: string;
+  customCssPath: string;
+  basePath: string;
+  siteName: string;
+  repoUrl: string;
+  sourceBranch: string;
+};
+
+type Heading = {
+  depth: number;
+  text: string;
+  slug: string;
+};
+
+type DocumentRecord = {
+  title: string;
+  description: string;
+  path: string;
+  sourcePath: string;
+  headings: Heading[];
+  plainText: string;
+  updatedAt: string;
+  directory: string;
+  html: string;
+  isIndex: boolean;
+  isGeneratedIndex: boolean;
+  fallbackName: string;
+};
+
+type DirectoryEntry = {
+  kind: "group" | "page";
+  title: string;
+  path: string;
+  description: string;
+};
+
+type DirectoryNode = {
+  name: string;
+  route: string;
+  title: string;
+  indexDocument: DocumentRecord | null;
+  generatedDocument: DocumentRecord | null;
+  documents: DocumentRecord[];
+  children: Map<string, DirectoryNode>;
+};
+
+type BreadcrumbItem = {
+  label: string;
+  href: string | null;
+};
 
 let rootDir = process.cwd();
 let docsDir = path.join(rootDir, "docs");
@@ -32,7 +103,7 @@ const md = new MarkdownIt({
   },
 });
 
-export async function buildSite(userConfig = {}) {
+export async function buildSite(userConfig: BuildConfig = {}): Promise<void> {
   configureBuild(userConfig);
   await resetDist();
 
@@ -101,7 +172,7 @@ export async function buildSite(userConfig = {}) {
   );
 }
 
-function configureBuild(userConfig) {
+function configureBuild(userConfig: BuildConfig): void {
   const resolved = resolveBuildConfig(userConfig);
   rootDir = resolved.rootDir;
   docsDir = resolved.docsDir;
@@ -114,7 +185,7 @@ function configureBuild(userConfig) {
   sourceBranch = resolved.sourceBranch;
 }
 
-export function resolveBuildConfig(userConfig = {}) {
+export function resolveBuildConfig(userConfig: BuildConfig = {}): ResolvedBuildConfig {
   const currentRoot = path.resolve(userConfig.rootDir || process.cwd());
   return {
     rootDir: currentRoot,

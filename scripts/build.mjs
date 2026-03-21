@@ -1,5 +1,5 @@
-import { buildSite } from "../src/core/build-site.mjs";
-import { loadConfig } from "../src/core/load-config.mjs";
+import { buildSite } from "../lib/core/build-site.js";
+import { loadConfig } from "../lib/core/load-config.js";
 
 const config = await loadConfig();
 

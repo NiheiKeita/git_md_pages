@@ -2,6 +2,8 @@
 
 Markdown を配置するだけで、一覧・検索・パンくず付きの静的ドキュメントサイトを生成する CLI / ライブラリです。
 
+TypeScript の型定義を同梱しているので、ライブラリとして import して使う場合も補完が効きます。
+
 ## Install
 
 ```bash
@@ -59,3 +61,16 @@ await buildSite({
   outDir: "dist",
 });
 ```
+
+## Release
+
+メンテナ向けの release は semver タグで行います。
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+プレリリース相当なら `v1.0.0-r1` のようなタグも使えます。`package.json` の `version` とタグは一致している必要があります。
+
+GitHub Actions から npm publish するには、npm 側でこの repository と [`release.yml`](/Users/niheikeita/develop/git_md_pages/.github/workflows/release.yml) を Trusted Publisher として登録してください。

@@ -1,12 +1,19 @@
 import path from "node:path";
 import { pathToFileURL } from "node:url";
+import fs from "node:fs/promises";
+import type { BuildConfig } from "./build-site.js";
 
 const DEFAULT_CONFIG_FILES = [
   "git-md-pages.config.mjs",
   "git-md-pages.config.js",
 ];
 
-export async function loadConfig(options = {}) {
+type LoadConfigOptions = {
+  rootDir?: string;
+  configPath?: string;
+};
+
+export async function loadConfig(options: LoadConfigOptions = {}): Promise<BuildConfig> {
   const rootDir = path.resolve(options.rootDir || process.cwd());
   const explicitPath = options.configPath ? path.resolve(rootDir, options.configPath) : "";
   const configPath = explicitPath || (await findConfigFile(rootDir));
@@ -23,11 +30,10 @@ export async function loadConfig(options = {}) {
   };
 }
 
-async function findConfigFile(rootDir) {
+async function findConfigFile(rootDir: string): Promise<string> {
   for (const candidate of DEFAULT_CONFIG_FILES) {
     const candidatePath = path.join(rootDir, candidate);
     try {
-      const fs = await import("node:fs/promises");
       await fs.access(candidatePath);
       return candidatePath;
     } catch {
