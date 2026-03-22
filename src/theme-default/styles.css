@@ -92,11 +92,7 @@ kbd {
 }
 
 .site-header {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  backdrop-filter: blur(18px);
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  background: color-mix(in srgb, var(--surface) 96%, transparent);
   border-bottom: 1px solid var(--line);
 }
 
@@ -304,30 +300,13 @@ kbd {
 }
 
 .page-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.7rem;
-  margin-top: 1.05rem;
-}
-
-.meta-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.45rem 0.72rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--surface-muted);
+  margin-top: 0.9rem;
   color: var(--text-soft);
-  font-size: 0.88rem;
+  font-size: 0.82rem;
 }
 
-.meta-chip strong {
-  color: var(--text);
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+.page-updated {
+  display: inline-block;
 }
 
 .markdown {
@@ -374,9 +353,12 @@ kbd {
 
 .markdown a {
   color: var(--accent-strong);
-  text-decoration: underline;
-  text-decoration-thickness: 0.06em;
-  text-underline-offset: 0.18em;
+  font-weight: 600;
+}
+
+.markdown a:hover,
+.markdown a:focus-visible {
+  color: var(--accent);
 }
 
 .markdown ul,

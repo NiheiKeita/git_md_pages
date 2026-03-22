@@ -790,10 +790,6 @@ function renderDocumentPage({ doc, breadcrumbs, sectionEntries, bodyHtml }) {
     `
     : "";
 
-  const sourceMeta = doc.sourcePath
-    ? `<span class="meta-chip"><strong>Source</strong> ${escapeHtml(doc.sourcePath)}</span>`
-    : `<span class="meta-chip"><strong>Source</strong> generated from directory</span>`;
-
   const content = `
     <div class="page-grid article-layout">
       <section class="article-panel article-main">
@@ -804,9 +800,7 @@ function renderDocumentPage({ doc, breadcrumbs, sectionEntries, bodyHtml }) {
           ${doc.description ? `<p class="page-description">${escapeHtml(doc.description)}</p>` : ""}
         </header>
         <div class="page-meta">
-          <span class="meta-chip"><strong>URL</strong> ${escapeHtml(doc.path)}</span>
-          <span class="meta-chip"><strong>Updated</strong> ${escapeHtml(formatDate(doc.updatedAt))}</span>
-          ${sourceMeta}
+          <span class="page-updated">Updated ${escapeHtml(formatDate(doc.updatedAt))}</span>
         </div>
         <div class="markdown">${bodyHtml}</div>
         ${githubActions}
@@ -1008,7 +1002,6 @@ function renderEntryList(entries) {
             <a class="doc-card" href="${escapeHtml(prefixBasePath(entry.path))}">
               <span class="doc-card-kind">${entry.kind === "group" ? "Group" : "Page"}</span>
               <span class="doc-card-title">${escapeHtml(entry.title)}</span>
-              <span class="doc-card-path">${escapeHtml(entry.path)}</span>
               ${entry.description ? `<span class="doc-card-description">${escapeHtml(entry.description)}</span>` : ""}
             </a>
           `,
