@@ -9,6 +9,7 @@ const searchForm = document.querySelector("[data-search-form]");
 const searchInput = document.querySelector("[data-search-input]");
 const searchDropdown = document.querySelector("[data-search-dropdown]");
 const searchPageRoot = document.querySelector("[data-search-page]");
+const searchToggle = document.querySelector("[data-search-toggle]");
 
 function escapeHtml(value) {
   return String(value)
@@ -179,6 +180,21 @@ function closeDropdown() {
   }
 }
 
+function setSearchOpen(isOpen) {
+  if (!searchForm || !searchToggle) {
+    return;
+  }
+  searchForm.dataset.mobileOpen = isOpen ? "true" : "false";
+  searchToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+  if (!isOpen) {
+    closeDropdown();
+  }
+}
+
+function isMobileViewport() {
+  return window.matchMedia("(max-width: 720px)").matches;
+}
+
 function isTypingTarget(target) {
   if (!(target instanceof HTMLElement)) {
     return false;
@@ -298,6 +314,8 @@ async function updateSearch(query, { dropdown = false, searchPage = false } = {}
 }
 
 if (searchForm && searchInput) {
+  setSearchOpen(false);
+
   searchForm.addEventListener("submit", (event) => {
     event.preventDefault();
     const query = searchInput.value.trim();
@@ -317,6 +335,9 @@ if (searchForm && searchInput) {
   });
 
   searchInput.addEventListener("focus", async () => {
+    if (isMobileViewport()) {
+      setSearchOpen(true);
+    }
     if (searchInput.value.trim()) {
       try {
         await updateSearch(searchInput.value, { dropdown: true });
@@ -329,20 +350,51 @@ if (searchForm && searchInput) {
   document.addEventListener("click", (event) => {
     if (!searchForm.contains(event.target)) {
       closeDropdown();
+      if (searchToggle && !searchToggle.contains(event.target) && isMobileViewport()) {
+        setSearchOpen(false);
+      }
     }
   });
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
       closeDropdown();
+      if (isMobileViewport()) {
+        setSearchOpen(false);
+      }
     }
 
     if (event.key === "/" && !isTypingTarget(event.target)) {
       event.preventDefault();
+      if (isMobileViewport()) {
+        setSearchOpen(true);
+      }
       searchInput.focus();
       searchInput.select();
     }
   });
+
+  if (searchToggle) {
+    searchToggle.addEventListener("click", () => {
+      const isOpen = searchForm.dataset.mobileOpen === "true";
+      setSearchOpen(!isOpen);
+      if (!isOpen) {
+        searchInput.focus();
+      }
+    });
+  }
+
+  window.addEventListener("resize", () => {
+    if (!isMobileViewport()) {
+      setSearchOpen(true);
+      return;
+    }
+    setSearchOpen(false);
+  });
+
+  if (!isMobileViewport()) {
+    setSearchOpen(true);
+  }
 }
 
 if (searchPageRoot) {

@@ -1090,7 +1090,11 @@ function renderShell({ title, description, currentPath, content }) {
               <span class="brand-name">${escapeHtml(siteName)}</span>
             </span>
           </a>
-          <form class="search-shell" data-search-form action="${escapeHtml(prefixBasePath("/search/"))}" method="get">
+          <button class="search-toggle" type="button" data-search-toggle aria-expanded="false" aria-controls="site-search">
+            <span class="search-toggle-icon" aria-hidden="true">⌕</span>
+            <span class="search-toggle-label">検索</span>
+          </button>
+          <form class="search-shell" id="site-search" data-search-form action="${escapeHtml(prefixBasePath("/search/"))}" method="get">
             <label class="search-label">
               <span class="search-icon" aria-hidden="true">⌕</span>
               <input class="search-input" type="search" name="q" data-search-input placeholder="ドキュメントを検索" autocomplete="off">

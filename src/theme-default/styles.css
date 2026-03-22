@@ -158,6 +158,29 @@ kbd {
   justify-content: flex-end;
 }
 
+.search-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 2.5rem;
+  padding: 0.58rem 0.82rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  color: var(--text-soft);
+  font: inherit;
+}
+
+.search-toggle-icon {
+  font-size: 1rem;
+}
+
+.search-toggle-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
 .header-link {
   display: inline-flex;
   align-items: center;
@@ -781,10 +804,40 @@ mark {
 }
 
 @media (max-width: 720px) {
+  .site-header-inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.9rem;
+    align-items: center;
+  }
+
   .site-header-inner,
   .site-main,
   .site-footer-inner {
     width: min(calc(100% - 1rem), var(--content-width));
+  }
+
+  .search-toggle {
+    display: inline-flex;
+    justify-self: end;
+  }
+
+  .search-toggle-label {
+    display: none;
+  }
+
+  .search-shell {
+    grid-column: 1 / -1;
+    display: none;
+  }
+
+  .search-shell[data-mobile-open="true"] {
+    display: block;
+  }
+
+  .header-links {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+    flex-wrap: wrap;
   }
 
   .site-main {
