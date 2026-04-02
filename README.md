@@ -76,7 +76,12 @@ await buildSite({
 
 ## Release
 
-メンテナ向けの release は semver タグで行います。
+メンテナ向けの release は semver タグで行います。`.github/workflows/release.yml` は以下を自動で実行します。
+
+- `package.json` の `version` とタグの整合チェック
+- `npm run check` / `npm test` / `npm pack --dry-run`
+- npm への publish
+- GitHub Release の作成
 
 ```bash
 git tag v1.0.0
@@ -85,4 +90,12 @@ git push origin v1.0.0
 
 プレリリース相当なら `v1.0.0-r1` のようなタグも使えます。`package.json` の `version` とタグは一致している必要があります。
 
-GitHub Actions から npm publish するには、npm 側でこの repository と `.github/workflows/release.yml` を Trusted Publisher として登録してください。
+GitHub Actions 側で追加の secret は不要です。npm 側でこの repository と `.github/workflows/release.yml` を Trusted Publisher として登録してください。
+
+Trusted Publisher には以下を設定します。
+
+- Repository: `NiheiKeita/mdocbuilder`
+- Workflow file: `.github/workflows/release.yml`
+- Environment: なし
+
+もし Trusted Publisher を使わずにトークン publish に切り替えるなら、GitHub secret `NPM_TOKEN` を作成し、publish step に `NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}` を渡します。

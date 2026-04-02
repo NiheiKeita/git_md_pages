@@ -1,8 +1,19 @@
 {
   "name": "mdocbuilder",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "Static documentation site generator for Markdown with search, breadcrumbs, and directory indexes.",
   "license": "MIT",
+  "homepage": "https://github.com/NiheiKeita/mdocbuilder#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NiheiKeita/mdocbuilder.git"
+  },
+  "bugs": {
+    "url": "https://github.com/NiheiKeita/mdocbuilder/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "markdown",
     "docs",
